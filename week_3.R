@@ -3,6 +3,7 @@
 library(tableone)
 library(Matching)
 library(MatchIt)
+library(ggplot2)
 
 # load the data
 data(lalonde)
@@ -68,7 +69,7 @@ pscore<-psmodel$fitted.values
 
 # plot propensity score histograms
 pscore_df<-data.frame(
-  treat=lalonde$treat,
+  treat=ifelse(lalonde$treat==1, "1", "0"),
   pscore=pscore
 )
 ggplot(pscore_df, aes(x=pscore)) +
@@ -83,7 +84,7 @@ min(pscore)
 max(pscore)
 
 # using matchit
-m.out <- matchit(treat~age+educ+black+hispan+married+nodegree+re74+re75+re78,
+m.out <- matchit(treat~age+educ+black+hispan+married+nodegree+re74+re75,
                  data=lalonde, method="nearest")
 summary(m.out)
 
